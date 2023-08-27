@@ -28,12 +28,11 @@ public abstract class Entity<ID extends Identifier> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final Entity<?> entity = (Entity<?>) o;
-        return Objects.equals(getId(), entity.getId());
+        return getId().equals(entity.getId());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getId());
     }
-
 }

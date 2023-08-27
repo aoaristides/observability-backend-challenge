@@ -1,11 +1,12 @@
 package br.com.makersweb.picpay.simplified.domain.user;
 
 import br.com.makersweb.picpay.simplified.domain.AggregateRoot;
-import br.com.makersweb.picpay.simplified.domain.dto.UserDTO;
+import br.com.makersweb.picpay.simplified.domain.utils.InstantUtils;
 import br.com.makersweb.picpay.simplified.domain.validation.ValidationHandler;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * @author aaristides
@@ -24,7 +25,20 @@ public class User extends AggregateRoot<UserID> {
     private Instant updatedAt;
     private Instant deletedAt;
 
-    private User(final UserID anId, final String aFirstName, final String aLastName, final String aDocument, final String aMail, final String aPassword, final BigDecimal aBalance, final UserType aType, final boolean isActive, final Instant aCreationDate, final Instant aUpdateDate, final Instant aDeleteDate) {
+    private User(
+            final UserID anId,
+            final String aFirstName,
+            final String aLastName,
+            final String aDocument,
+            final String aMail,
+            final String aPassword,
+            final BigDecimal aBalance,
+            final UserType aType,
+            final boolean isActive,
+            final Instant aCreationDate,
+            final Instant aUpdateDate,
+            final Instant aDeleteDate
+    ) {
         super(anId);
         this.firstName = aFirstName;
         this.lastName = aLastName;
@@ -34,16 +48,60 @@ public class User extends AggregateRoot<UserID> {
         this.balance = aBalance;
         this.type = aType;
         this.active = isActive;
-        this.createdAt = aCreationDate;
-        this.updatedAt = aUpdateDate;
+        this.createdAt = Objects.requireNonNull(aCreationDate, "'createdAt' should not be null");;
+        this.updatedAt = Objects.requireNonNull(aUpdateDate, "'updatedAt' should not be null");;
         this.deletedAt = aDeleteDate;
     }
 
-    public static User newUser(final String aFirstName, final String aLastName, final String aDocument, final String aMail, final String aPassword, final BigDecimal aBalance, final UserType aType, final boolean isActive) {
+    public static User newUser(
+            final String aFirstName,
+            final String aLastName,
+            final String aDocument,
+            final String aMail,
+            final String aPassword,
+            final BigDecimal aBalance,
+            final UserType aType,
+            final boolean isActive
+    ) {
         final var id = UserID.unique();
-        final var now = Instant.now();
+        final var now = InstantUtils.now();
         final var deletedAt = isActive ? null : now;
         return new User(id, aFirstName, aLastName, aDocument, aMail, aPassword, aBalance, aType, isActive, now, now, deletedAt);
+    }
+
+    public static User with(
+            final UserID anId,
+            final String firstName,
+            final String lastName,
+            final String document,
+            final String mail,
+            final String password,
+            final BigDecimal balance,
+            final UserType type,
+            final boolean isActive,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt
+
+    ) {
+        return new User(anId, firstName, lastName, document, mail, password, balance, type, isActive, createdAt, updatedAt, deletedAt);
+    }
+
+    public static User with(final User aUser) {
+        return with(
+                aUser.getId(),
+                aUser.firstName,
+                aUser.lastName,
+                aUser.document,
+                aUser.mail,
+                aUser.password,
+                aUser.balance,
+                aUser.type,
+                aUser.isActive(),
+                aUser.createdAt,
+                aUser.updatedAt,
+                aUser.deletedAt
+        );
     }
 
     @Override
@@ -54,21 +112,30 @@ public class User extends AggregateRoot<UserID> {
     public User activate() {
         this.deletedAt = null;
         this.active = true;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
         return this;
     }
 
     public User deactivate() {
         if (getDeletedAt() == null) {
-            this.deletedAt = Instant.now();
+            this.deletedAt = InstantUtils.now();
         }
 
         this.active = false;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
         return this;
     }
 
-    public User update(final String aFirstName, final String aLastName, final String aDocument, final String aMail, final String aPassword, final BigDecimal aBalance, final UserType aType, final boolean isActive) {
+    public User update(
+            final String aFirstName,
+            final String aLastName,
+            final String aDocument,
+            final String aMail,
+            final String aPassword,
+            final BigDecimal aBalance,
+            final UserType aType,
+            final boolean isActive
+    ) {
         if (isActive) {
             activate();
         } else {
@@ -82,12 +149,8 @@ public class User extends AggregateRoot<UserID> {
         this.password = aPassword;
         this.balance = aBalance;
         this.type = aType;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
         return this;
-    }
-
-    public UserDTO toUserDTO() {
-        return new UserDTO(this.firstName, this.lastName, this.document, this.balance, this.mail, this.password, this.type);
     }
 
     public UserID getId() {

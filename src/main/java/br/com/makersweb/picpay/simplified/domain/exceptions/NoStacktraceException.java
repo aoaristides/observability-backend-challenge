@@ -5,11 +5,12 @@ package br.com.makersweb.picpay.simplified.domain.exceptions;
  */
 public class NoStacktraceException extends RuntimeException {
 
-    public NoStacktraceException(String message) {
+    public NoStacktraceException(final String message) {
         this(message, null);
     }
 
-    public NoStacktraceException(String message, Throwable cause) {
+    public NoStacktraceException(final String message, final Throwable cause) {
         super(message, cause, true, false);
     }
+
 }
