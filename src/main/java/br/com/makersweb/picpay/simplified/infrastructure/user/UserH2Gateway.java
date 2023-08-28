@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +71,7 @@ public class UserH2Gateway implements UserGateway {
         final var pageResult = this.repository.findAll(Specification.where(specifications), page);
 
         if (pageResult.getTotalElements() == 0) {
-            return null;
+            return new Pagination<>(0, 0, 0,  Collections.emptyList());
         }
 
         return new Pagination<>(

@@ -23,3 +23,19 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - ./.docker/grafana_data:/var/lib/grafana
+
+  mysql:
+    container_name: adm_picpay_mysql
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=Tulipa123
+      - MYSQL_DATABASE=adm_picpay
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "33006:3306"
+    networks:
+      - adm_picpay_network
+
+networks:
+  adm_picpay_network:

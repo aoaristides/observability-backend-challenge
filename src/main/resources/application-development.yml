@@ -1,0 +1,12 @@
+mysql:
+  username: root
+  password: Tulipa123
+  schema: adm_picpay
+  url: localhost:33006
+
+server:
+  port: 8080
+  undertow:
+    threads:
+      worker: 10
+      io: 2
