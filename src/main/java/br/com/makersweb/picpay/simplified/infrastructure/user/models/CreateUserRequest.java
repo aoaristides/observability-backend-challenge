@@ -1,6 +1,5 @@
 package br.com.makersweb.picpay.simplified.infrastructure.user.models;
 
-import br.com.makersweb.picpay.simplified.domain.user.UserType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
@@ -23,7 +22,7 @@ public record CreateUserRequest(
         @JsonProperty("mail") String mail,
         @JsonProperty("password") String password,
         @JsonProperty("balance") BigDecimal balance,
-        @JsonProperty("type") UserType type,
+        @JsonProperty("type") String type,
         @JsonProperty("is_active") Boolean active
 ) {
 }

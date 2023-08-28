@@ -6,10 +6,7 @@ import br.com.makersweb.picpay.simplified.domain.user.UserType;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -36,7 +33,10 @@ public class UserJpaEntity {
 
     private String password;
     private BigDecimal balance;
+
+    @Enumerated(EnumType.STRING)
     private UserType type;
+
     private boolean active;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")

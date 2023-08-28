@@ -1,5 +1,6 @@
 package br.com.makersweb.picpay.simplified.infrastructure.user;
 
+import br.com.makersweb.picpay.simplified.domain.exceptions.DuplicateViolationException;
 import br.com.makersweb.picpay.simplified.domain.pagination.Pagination;
 import br.com.makersweb.picpay.simplified.domain.pagination.SearchQuery;
 import br.com.makersweb.picpay.simplified.domain.user.User;
@@ -7,6 +8,7 @@ import br.com.makersweb.picpay.simplified.domain.user.UserGateway;
 import br.com.makersweb.picpay.simplified.domain.user.UserID;
 import br.com.makersweb.picpay.simplified.infrastructure.user.persistence.UserJpaEntity;
 import br.com.makersweb.picpay.simplified.infrastructure.user.persistence.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,16 +24,23 @@ import static br.com.makersweb.picpay.simplified.infrastructure.utils.Specificat
  * @author aaristides
  */
 @Component
-public class UserH2Gateway implements UserGateway {
+@Slf4j
+public class UserMySQLGateway implements UserGateway {
 
     private final UserRepository repository;
 
-    public UserH2Gateway(final UserRepository repository) {
+    public UserMySQLGateway(final UserRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public User create(final User aUser) {
+        log.info("Init method create by user - {}", aUser.getId());
+        final var existUserByDocument = this.findByDocument(aUser.getDocument());
+        if (existUserByDocument.isPresent()) {
+            throw DuplicateViolationException.with(User.class, aUser.getDocument());
+        }
+
         return save(aUser);
     }
 
@@ -46,6 +55,12 @@ public class UserH2Gateway implements UserGateway {
     @Override
     public Optional<User> findById(final UserID anId) {
         return this.repository.findById(anId.getValue()).map(UserJpaEntity::toAggregate);
+    }
+
+    @Override
+    public Optional<User> findByDocument(final String aDocument) {
+        log.info("Init method findByDocument by document - {}", aDocument);
+        return this.repository.findByDocument(aDocument).map(UserJpaEntity::toAggregate);
     }
 
     @Override

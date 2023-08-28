@@ -17,6 +17,8 @@ public interface UserGateway {
 
     Optional<User> findById(final UserID anId);
 
+    Optional<User> findByDocument(final String aDocument);
+
     User update(final User aUser);
 
     Pagination<User> findAll(SearchQuery aQuery);

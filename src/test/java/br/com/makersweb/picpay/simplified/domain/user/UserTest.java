@@ -20,7 +20,7 @@ public class UserTest {
         final var expectedMail = "joyce.miranda@example.com";
         final var expectedPassword = "Tulipa123@";
         final var expectedBalance = BigDecimal.valueOf(10);
-        final var expectedType = UserType.COMMON;
+        final var expectedType = "COMMON";
         final var expectedActive = true;
 
         final var actualUser = User.newUser(expectedFirstName, expectedLastName, expectedDocument, expectedMail, expectedPassword, expectedBalance, expectedType, expectedActive);
@@ -44,7 +44,7 @@ public class UserTest {
         final var expectedMail = "joyce.miranda@example.com";
         final var expectedPassword = "Tulipa123@";
         final var expectedBalance = BigDecimal.valueOf(10);
-        final var expectedType = UserType.COMMON;
+        final var expectedType = "COMMON";
         final var expectedActive = true;
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'firstName' or 'lastName' should not be null";

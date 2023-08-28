@@ -1,7 +1,5 @@
 package br.com.makersweb.picpay.simplified.application.user.create;
 
-import br.com.makersweb.picpay.simplified.domain.user.UserType;
-
 import java.math.BigDecimal;
 
 /**
@@ -22,7 +20,7 @@ public record CreateUserCommand(
         String mail,
         String password,
         BigDecimal balance,
-        UserType type,
+        String type,
         boolean isActive
 ) {
 
@@ -33,7 +31,7 @@ public record CreateUserCommand(
             final String aMail,
             final String aPassword,
             final BigDecimal aBalance,
-            final UserType aType,
+            final String aType,
             final boolean isActive
     ) {
         return new CreateUserCommand(aFirstName, aLastName, aDocument, aMail, aPassword, aBalance, aType, isActive);

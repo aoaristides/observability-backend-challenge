@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author aaristides
@@ -18,5 +19,7 @@ public interface UserRepository extends JpaRepository<UserJpaEntity, String> {
 
     @Query(value = "select c.id from Users c where c.id in :ids")
     List<String> existsByIds(@Param("ids") List<String> ids);
+
+    Optional<UserJpaEntity> findByDocument(final String document);
 
 }

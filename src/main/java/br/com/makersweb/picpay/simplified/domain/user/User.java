@@ -6,6 +6,7 @@ import br.com.makersweb.picpay.simplified.domain.validation.ValidationHandler;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -60,13 +61,14 @@ public class User extends AggregateRoot<UserID> {
             final String aMail,
             final String aPassword,
             final BigDecimal aBalance,
-            final UserType aType,
+            final String aType,
             final boolean isActive
     ) {
         final var id = UserID.unique();
         final var now = InstantUtils.now();
         final var deletedAt = isActive ? null : now;
-        return new User(id, aFirstName, aLastName, aDocument, aMail, aPassword, aBalance, aType, isActive, now, now, deletedAt);
+        final var type = userTypeFromString(aType);
+        return new User(id, aFirstName, aLastName, aDocument, aMail, aPassword, aBalance, type, isActive, now, now, deletedAt);
     }
 
     public static User with(
@@ -151,6 +153,12 @@ public class User extends AggregateRoot<UserID> {
         this.type = aType;
         this.updatedAt = InstantUtils.now();
         return this;
+    }
+
+    private static UserType userTypeFromString(final String value) {
+        return Arrays.stream(UserType.values())
+                .filter(type -> type.name().equalsIgnoreCase(value))
+                .findFirst().orElse(UserType.COMMON);
     }
 
     public UserID getId() {
